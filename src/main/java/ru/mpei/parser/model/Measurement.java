@@ -1,4 +1,4 @@
-package ru.mpei.comtrade.model;
+package ru.mpei.parser.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

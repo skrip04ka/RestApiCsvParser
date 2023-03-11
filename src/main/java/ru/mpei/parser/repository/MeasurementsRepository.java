@@ -1,8 +1,8 @@
-package ru.mpei.comtrade.repository;
+package ru.mpei.parser.repository;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mpei.comtrade.model.Measurement;
+import ru.mpei.parser.model.Measurement;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.*;

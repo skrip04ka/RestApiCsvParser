@@ -1,6 +1,6 @@
-package ru.mpei.comtrade.service;
+package ru.mpei.parser.service;
 
-import ru.mpei.comtrade.model.Measurement;
+import ru.mpei.parser.model.Measurement;
 
 import java.util.List;
 import java.util.Map;

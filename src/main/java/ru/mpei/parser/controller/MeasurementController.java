@@ -1,9 +1,9 @@
-package ru.mpei.comtrade.controller;
+package ru.mpei.parser.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.mpei.comtrade.service.MeasurementServiceImp;
+import ru.mpei.parser.service.MeasurementServiceImp;
 
 @RestController
 public class MeasurementController {

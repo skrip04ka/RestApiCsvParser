@@ -1,7 +1,7 @@
-package ru.mpei.comtrade.service;
+package ru.mpei.parser.service;
 
 import org.springframework.stereotype.Service;
-import ru.mpei.comtrade.model.Measurement;
+import ru.mpei.parser.model.Measurement;
 
 import java.util.*;
 

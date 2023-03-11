@@ -1,4 +1,4 @@
-package ru.mpei.comtrade.service;
+package ru.mpei.parser.service;
 
 import org.springframework.web.multipart.MultipartFile;
 

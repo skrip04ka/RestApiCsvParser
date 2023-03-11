@@ -1,12 +1,12 @@
-package ru.mpei.comtrade.service;
+package ru.mpei.parser.service;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.mpei.comtrade.model.Measurement;
-import ru.mpei.comtrade.repository.MeasurementsRepository;
+import ru.mpei.parser.model.Measurement;
+import ru.mpei.parser.repository.MeasurementsRepository;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
