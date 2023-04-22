@@ -8,11 +8,15 @@ import ru.mpei.parser.service.MeasurementServiceImp;
 @RestController
 public class MeasurementController {
 
+    private final MeasurementServiceImp measurementService;
+
     @Autowired
-    private MeasurementServiceImp measurementService;
+    public MeasurementController(MeasurementServiceImp measurementService) {
+        this.measurementService = measurementService;
+    }
 
     @PostMapping("/data/upload")
-    public void uploadFile(@RequestParam MultipartFile file){
+    public void uploadFile(@RequestParam MultipartFile file) {
         measurementService.parseFile(file);
 
     }

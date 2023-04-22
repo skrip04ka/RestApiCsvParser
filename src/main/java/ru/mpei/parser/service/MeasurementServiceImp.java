@@ -18,15 +18,19 @@ import java.util.StringJoiner;
 
 @Service
 @Slf4j
-public class MeasurementServiceImp implements MeasurementService{
+public class MeasurementServiceImp implements MeasurementService {
 
     private double setPoint = 0.0;
 
-    @Autowired
-    private MeasurementsRepository measurementsRepository;
+    private final MeasurementsRepository measurementsRepository;
+
+    private final FilterService filterService;
 
     @Autowired
-    private FilterService filterService;
+    public MeasurementServiceImp(MeasurementsRepository measurementsRepository, FilterService filterService) {
+        this.measurementsRepository = measurementsRepository;
+        this.filterService = filterService;
+    }
 
     @Override
     @SneakyThrows
@@ -35,15 +39,15 @@ public class MeasurementServiceImp implements MeasurementService{
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         String line = bufferedReader.readLine();
         line = bufferedReader.readLine();
-        while (line != null){
+        while (line != null) {
             String[] stringParts = line.split(",");
-            if (stringParts.length > 4){
+            if (stringParts.length > 4) {
                 measurementsRepository.save(new Measurement(
                         Double.parseDouble(stringParts[0]),
                         Double.parseDouble(stringParts[1]),
                         Double.parseDouble(stringParts[2]),
                         Double.parseDouble(stringParts[3])
-                        ));
+                ));
             }
 
             line = bufferedReader.readLine();

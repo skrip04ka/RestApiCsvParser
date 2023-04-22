@@ -16,7 +16,7 @@ public class FourierFilterService implements FilterService {
     }
 
     @Override
-    public Map<phase, List<Double>> rmsByPhase (List<Measurement> measurementList, double freq) {
+    public Map<phase, List<Double>> rmsByPhase(List<Measurement> measurementList, double freq) {
 
         N = getMinPoints(freq, measurementList.get(1).getTime() - measurementList.get(0).getTime());
 
@@ -43,7 +43,7 @@ public class FourierFilterService implements FilterService {
         return rmsByPhase;
     }
 
-    private List<Double> calculateRms (List<Double> values) {
+    private List<Double> calculateRms(List<Double> values) {
         List<Double> rmsList = new ArrayList<>();
 
         if (values.size() < N) {
@@ -61,7 +61,7 @@ public class FourierFilterService implements FilterService {
         return rmsList;
     }
 
-    private double rms (List<Double> values) {
+    private double rms(List<Double> values) {
         double x = 0;
         for (double value : values) {
             x = x + Math.pow(value, 2);
