@@ -21,7 +21,7 @@ public class MeasurementsRepository {
     }
 
     @Transactional
-    public void save(Measurement m){
+    public void save(Measurement m) {
         if (m.getId() == 0) {
             em.persist(m);
         } else {
@@ -30,12 +30,12 @@ public class MeasurementsRepository {
     }
 
     @Transactional
-    public void flush(){
+    public void flush() {
         em.flush();
     }
 
     @Transactional
-    public List<Measurement> getMeasByIdDiapason(long startIndex, long endIndex){
+    public List<Measurement> getMeasByIdDiapason(long startIndex, long endIndex) {
         return em.createQuery("select m from Measurement m where m.id >= :startId and m.id <= :endId",
                         Measurement.class)
                 .setParameter("startId", startIndex)
@@ -44,7 +44,7 @@ public class MeasurementsRepository {
     }
 
     @Transactional
-    public Long getLastIndex(){
+    public Long getLastIndex() {
 
         return em.createQuery("select max(m.id) from Measurement m", Long.class).getSingleResult();
     }

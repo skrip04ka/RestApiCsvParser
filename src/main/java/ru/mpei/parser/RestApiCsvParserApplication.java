@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class RestApiCsvParserApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(RestApiCsvParserApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(RestApiCsvParserApplication.class, args);
+    }
 
 }
