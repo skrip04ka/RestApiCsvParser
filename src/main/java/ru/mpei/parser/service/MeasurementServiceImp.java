@@ -22,11 +22,15 @@ public class MeasurementServiceImp implements MeasurementService {
 
     private double setPoint = 0.0;
 
-    @Autowired
-    private MeasurementsRepository measurementsRepository;
+    private final MeasurementsRepository measurementsRepository;
+
+    private final FilterService filterService;
 
     @Autowired
-    private FilterService filterService;
+    public MeasurementServiceImp(MeasurementsRepository measurementsRepository, FilterService filterService) {
+        this.measurementsRepository = measurementsRepository;
+        this.filterService = filterService;
+    }
 
     @Override
     @SneakyThrows
