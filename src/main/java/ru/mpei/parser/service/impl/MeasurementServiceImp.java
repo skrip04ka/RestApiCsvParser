@@ -1,4 +1,4 @@
-package ru.mpei.parser.service;
+package ru.mpei.parser.service.impl;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mpei.parser.model.Measurement;
 import ru.mpei.parser.repository.MeasurementsRepository;
+import ru.mpei.parser.service.FilterService;
+import ru.mpei.parser.service.MeasurementService;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -54,7 +56,7 @@ public class MeasurementServiceImp implements MeasurementService {
         }
         bufferedReader.close();
         measurementsRepository.flush();
-        log.info("FIle read successfully");
+        log.info("File read successfully");
     }
 
     @Override
@@ -82,9 +84,6 @@ public class MeasurementServiceImp implements MeasurementService {
             log.warn("Error: uncorrected diapason, use minimum 1 period");
             return "Error: uncorrected diapason, use minimum 1 period";
         }
-
-//        StringJoiner logResult = new StringJoiner("", "fault type: ", "");
-//        logResult.setEmptyValue("no fault");
 
         StringJoiner result = new StringJoiner("");
         result.setEmptyValue("");
