@@ -21,8 +21,8 @@ public class CfgData {
     private Map<Integer, DataType> dataTypes;
     private double freq;
     private List<SamplingCfg> samplingsFreq;
-    private Date dateStart;
-    private Date dateEnd;
+    private String dateStart;
+    private String dateEnd;
     private FileType fileType;
 
     public enum FileType {

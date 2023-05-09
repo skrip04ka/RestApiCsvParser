@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mpei.parser.model.CfgData;
+import ru.mpei.parser.model.Measurements;
 import ru.mpei.parser.model.MetaInf;
 import ru.mpei.parser.model.comtrade.AnalogCfg;
 import ru.mpei.parser.model.comtrade.DigitalCfg;
 import ru.mpei.parser.model.comtrade.SamplingCfg;
 import ru.mpei.parser.model.measurement.AnalogMeas;
 import ru.mpei.parser.model.measurement.DigitalMeas;
-import ru.mpei.parser.model.Measurements;
 import ru.mpei.parser.repository.ClickHouseRepository;
 import ru.mpei.parser.util.ParserUtil;
 
@@ -21,7 +21,6 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Slf4j
@@ -35,7 +34,7 @@ public class ComtradeService {
     private final ClickHouseRepository clickHouseRepository;
     private final FourierFilterService filterService;
 
-    private final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy,HH:mm:ss.SSSSSS");
+//    private final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy,HH:mm:ss.SSSSSS");
 
     @Autowired
     public ComtradeService(ClickHouseRepository clickHouseRepository, FourierFilterService filterService) {
@@ -58,8 +57,8 @@ public class ComtradeService {
         metaInf.setAnalog(cfgData.getAnalogChannels().size());
         metaInf.setDigital(cfgData.getDigitalChannels().size());
         metaInf.setType("COMTRADE " + cfgData.getFileType().name());
-        metaInf.setTimeStart(cfgData.getDateStart().toString());
-        metaInf.setTimeEnd(cfgData.getDateEnd().toString());
+        metaInf.setTimeStart(cfgData.getDateStart());
+        metaInf.setTimeEnd(cfgData.getDateEnd());
 
         clickHouseRepository.saveMeas(measurements, metaInf);
     }
@@ -117,8 +116,8 @@ public class ComtradeService {
             samplingCfgList.add(samplingCfg);
         }
         cfgData.setSamplingsFreq(samplingCfgList);
-        cfgData.setDateStart(format.parse(bufferedReader.readLine()));
-        cfgData.setDateEnd(format.parse(bufferedReader.readLine()));
+        cfgData.setDateStart(bufferedReader.readLine());
+        cfgData.setDateEnd(bufferedReader.readLine());
 
         cfgData.setFileType(bufferedReader.readLine().contains("BINARY") ? CfgData.FileType.BINARY : CfgData.FileType.ASCII);
 
