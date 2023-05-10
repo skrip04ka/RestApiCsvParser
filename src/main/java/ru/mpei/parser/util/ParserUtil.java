@@ -7,12 +7,6 @@ import java.util.List;
 
 public class ParserUtil {
 
-//    @Value("${charSetName}")
-//    public static String charSetName = "Windows-1251";
-//    @Value("${digitalSuffix}")
-//    public static String digitalSuffix = "_BOOL";
-//    @Value("${rmsSuffix}")
-//    public static String rmsSuffix = "_RMS";
     private static final Transliterator toLatinTrans = Transliterator.getInstance("Russian-Latin/BGN");
 
     private ParserUtil() {
@@ -42,5 +36,13 @@ public class ParserUtil {
         }
         return arr;
     }
+
+    public static List<Boolean> bArrTo16Bit(byte[] b, int offset) {
+        List<Boolean> arr = new ArrayList<>(16);
+        arr.addAll(bArrTo8Bit(b, offset));
+        arr.addAll(bArrTo8Bit(b, offset+1));
+        return arr;
+    }
+
 
 }

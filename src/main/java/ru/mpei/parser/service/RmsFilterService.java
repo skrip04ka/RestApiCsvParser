@@ -13,11 +13,11 @@ import java.util.Map;
 
 @Service
 @Slf4j
-public class FourierFilterService {
+public class RmsFilterService {
     @Value("${filter.rmsSuffix}")
     private String rmsSuffix = "RMS";
 
-    public int getMinPoints(double freq, double dt) {
+    private int getMinPoints(double freq, double dt) {
         log.debug("dt = {}", dt);
         return (int) (1 / dt / freq);
     }
@@ -56,7 +56,7 @@ public class FourierFilterService {
         return N;
     }
 
-    private class RmsCalc {
+    private static class RmsCalc {
         private final double[] buffer;
         private int i = 0;
 

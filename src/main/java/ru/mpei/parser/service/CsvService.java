@@ -26,11 +26,13 @@ public class CsvService {
 
     @Value("${parser.digitalSuffix}")
     private String digitalSuffix = "BOOL";
+    @Value("${parser.csv.analogKeyword}")
+    private String analogKeyword = "branch";
     private final ClickHouseRepository clickHouseRepository;
-    private final FourierFilterService filterService;
+    private final RmsFilterService filterService;
 
     @Autowired
-    public CsvService(ClickHouseRepository clickHouseRepository, FourierFilterService filterService) {
+    public CsvService(ClickHouseRepository clickHouseRepository, RmsFilterService filterService) {
         this.clickHouseRepository = clickHouseRepository;
         this.filterService = filterService;
     }
@@ -77,7 +79,7 @@ public class CsvService {
     }
 
     private Type getType(String s) {
-        return s.toLowerCase().contains("branch") ? Type.ANALOG : Type.DIGITAL;
+        return s.toLowerCase().contains(analogKeyword) ? Type.ANALOG : Type.DIGITAL;
     }
 
     @SneakyThrows
@@ -104,7 +106,7 @@ public class CsvService {
     }
 
     @ToString
-    private class HeaderData {
+    private static class HeaderData {
         private final List<Type> types = new ArrayList<>();
         private final List<String> names = new ArrayList<>();
     }

@@ -32,12 +32,12 @@ public class ComtradeService {
     @Value("${parser.digitalSuffix}")
     private String digitalSuffix = "BOOL";
     private final ClickHouseRepository clickHouseRepository;
-    private final FourierFilterService filterService;
+    private final RmsFilterService filterService;
 
 //    private final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy,HH:mm:ss.SSSSSS");
 
     @Autowired
-    public ComtradeService(ClickHouseRepository clickHouseRepository, FourierFilterService filterService) {
+    public ComtradeService(ClickHouseRepository clickHouseRepository, RmsFilterService filterService) {
         this.clickHouseRepository = clickHouseRepository;
         this.filterService = filterService;
     }
@@ -186,13 +186,13 @@ public class ComtradeService {
             meas.setAnalogMeas(analogMeas);
 
             List<DigitalMeas> digitalMeas = new ArrayList<>();
-            for (int j = 0; j < Math.ceilDiv(cfg.getDigitalChannels().size(), 8); j++) {
-                List<Boolean> arr = ParserUtil.bArrTo8Bit(bytes, i);
-                for (int k = 0; k < 8; k++) {
-                    if (cfg.getDigitalChannels().size() < j * 8 + k) break;
-                    digitalMeas.add(new DigitalMeas(cfg.getDigitalChannels().get(j * 8 + k).getChannelId(), arr.get(k)));
+            for (int j = 0; j < Math.ceilDiv(cfg.getDigitalChannels().size(), 16); j++) {
+                List<Boolean> arr = ParserUtil.bArrTo16Bit(bytes, i);
+                for (int k = 0; k < 16; k++) {
+                    if (cfg.getDigitalChannels().size() < j * 16 + k) break;
+                    digitalMeas.add(new DigitalMeas(cfg.getDigitalChannels().get(j * 16 + k).getChannelId(), arr.get(k)));
                 }
-                i++;
+                i=i+2;
             }
             meas.setDigitalMeas(digitalMeas);
 
