@@ -1,4 +1,4 @@
-package ru.mpei.parser.repository;
+package ru.mpei.parser.repository.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,12 +7,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.stereotype.Repository;
-import ru.mpei.parser.model.MeasList;
+import ru.mpei.parser.model.dto.MeasList;
 import ru.mpei.parser.model.Measurements;
 import ru.mpei.parser.model.MetaInf;
 import ru.mpei.parser.model.measurement.AnalogMeas;
 import ru.mpei.parser.model.measurement.DigitalMeas;
 import ru.mpei.parser.model.measurement.ThreeMeasData;
+import ru.mpei.parser.repository.MeasurementsRepository;
 import ru.mpei.parser.util.JsonParser;
 
 import java.sql.ResultSet;
@@ -22,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Repository
-public class ClickHouseRepository {
+public class MeasurementsRepositoryImpl implements MeasurementsRepository {
 
     @Value("${parser.digitalSuffix}")
     private String digitalSuffix = "BOOL";
@@ -31,10 +32,11 @@ public class ClickHouseRepository {
     private String table;
 
     @Autowired
-    public ClickHouseRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public MeasurementsRepositoryImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
+    @Override
     public void saveMeas(List<Measurements> measurements, MetaInf metaInf) {
         namedParameterJdbcTemplate.update(
                 "drop table if exists " + table,
@@ -121,6 +123,7 @@ public class ClickHouseRepository {
 
     }
 
+    @Override
     public List<String> getMeasNames() {
         List<String> names = namedParameterJdbcTemplate.queryForList(
                 "select COLUMNS.COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS " +
@@ -135,6 +138,7 @@ public class ClickHouseRepository {
     }
 
 
+    @Override
     public List<MeasList> getMeasByNames(List<String> names, int start, int end) {
         StringJoiner joinerColumn = new StringJoiner(", ");
         joinerColumn.add("time");
@@ -149,6 +153,7 @@ public class ClickHouseRepository {
                 new MeasurementMapper(names));
     }
 
+    @Override
     public List<ThreeMeasData> getThreeMeas(String phA, String phB, String phC) {
         StringJoiner joinerColumn = new StringJoiner(", ");
         joinerColumn.add("time");
@@ -161,6 +166,7 @@ public class ClickHouseRepository {
                 new ThreeMeasMapper(phA, phB, phC));
     }
 
+    @Override
     public MetaInf getMetaInf() {
         return JsonParser.parseData(namedParameterJdbcTemplate.queryForObject(
                         "SELECT comment FROM system.tables WHERE tables.name like :name and comment != ''",
@@ -191,11 +197,11 @@ public class ClickHouseRepository {
         }
     }
 
-    private class ThreeMeasMapper implements RowMapper<ThreeMeasData> {
+    private static class ThreeMeasMapper implements RowMapper<ThreeMeasData> {
 
-        private String phA;
-        private String phB;
-        private String phC;
+        private final String phA;
+        private final String phB;
+        private final String phC;
 
         public ThreeMeasMapper(String phA, String phB, String phC) {
             this.phA = phA;

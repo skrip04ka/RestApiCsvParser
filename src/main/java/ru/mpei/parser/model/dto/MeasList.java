@@ -1,4 +1,4 @@
-package ru.mpei.parser.model;
+package ru.mpei.parser.model.dto;
 
 import lombok.Data;
 import ru.mpei.parser.model.measurement.AnalogMeas;

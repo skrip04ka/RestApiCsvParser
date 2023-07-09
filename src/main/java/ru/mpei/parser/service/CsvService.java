@@ -11,7 +11,7 @@ import ru.mpei.parser.model.Measurements;
 import ru.mpei.parser.model.MetaInf;
 import ru.mpei.parser.model.measurement.AnalogMeas;
 import ru.mpei.parser.model.measurement.DigitalMeas;
-import ru.mpei.parser.repository.ClickHouseRepository;
+import ru.mpei.parser.repository.MeasurementsRepository;
 import ru.mpei.parser.util.ParserUtil;
 
 import java.io.BufferedReader;
@@ -28,12 +28,12 @@ public class CsvService {
     private String digitalSuffix = "BOOL";
     @Value("${parser.csv.analogKeyword}")
     private String analogKeyword = "branch";
-    private final ClickHouseRepository clickHouseRepository;
+    private final MeasurementsRepository measurementsRepository;
     private final RmsFilterService filterService;
 
     @Autowired
-    public CsvService(ClickHouseRepository clickHouseRepository, RmsFilterService filterService) {
-        this.clickHouseRepository = clickHouseRepository;
+    public CsvService(MeasurementsRepository measurementsRepository, RmsFilterService filterService) {
+        this.measurementsRepository = measurementsRepository;
         this.filterService = filterService;
     }
 
@@ -56,7 +56,7 @@ public class CsvService {
         metaInf.setDigital(measurements.get(0).getDigitalMeas().size());
         metaInf.setType("csv");
 
-        clickHouseRepository.saveMeas(measurements, metaInf);
+        measurementsRepository.saveMeas(measurements, metaInf);
     }
 
     private HeaderData parseHeader(String header) {

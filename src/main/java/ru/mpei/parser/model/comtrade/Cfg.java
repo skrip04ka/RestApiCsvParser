@@ -1,20 +1,16 @@
-package ru.mpei.parser.model;
+package ru.mpei.parser.model.comtrade;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.mpei.parser.model.comtrade.AnalogCfg;
-import ru.mpei.parser.model.comtrade.DigitalCfg;
-import ru.mpei.parser.model.comtrade.SamplingCfg;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class CfgData {
+public class Cfg {
     private String name;
     private List<AnalogCfg> analogChannels;
     private List<DigitalCfg> digitalChannels;

@@ -2,31 +2,31 @@ package ru.mpei.parser.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mpei.parser.model.MeasList;
 import ru.mpei.parser.model.MetaInf;
-import ru.mpei.parser.repository.ClickHouseRepository;
+import ru.mpei.parser.model.dto.MeasList;
+import ru.mpei.parser.repository.MeasurementsRepository;
 
 import java.util.List;
 
 @Service
 public class RepositoryService {
-    private final ClickHouseRepository clickHouseRepository;
+    private final MeasurementsRepository measurementsRepository;
 
     @Autowired
-    public RepositoryService(ClickHouseRepository clickHouseRepository) {
-        this.clickHouseRepository = clickHouseRepository;
+    public RepositoryService(MeasurementsRepository measurementsRepository) {
+        this.measurementsRepository = measurementsRepository;
     }
 
     public List<MeasList> getMeasByName(List<String> names, int start, int end) {
         if (start - end > 60000) end = start + 60000;
-        return clickHouseRepository.getMeasByNames(names, start, end);
+        return measurementsRepository.getMeasByNames(names, start, end);
     }
 
     public MetaInf getMetaInf() {
-        return clickHouseRepository.getMetaInf();
+        return measurementsRepository.getMetaInf();
     }
 
     public List<String> getMeasName() {
-        return clickHouseRepository.getMeasNames();
+        return measurementsRepository.getMeasNames();
     }
 }

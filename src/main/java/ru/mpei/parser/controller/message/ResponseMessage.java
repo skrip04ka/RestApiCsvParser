@@ -1,4 +1,4 @@
-package ru.mpei.parser.controller;
+package ru.mpei.parser.controller.message;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

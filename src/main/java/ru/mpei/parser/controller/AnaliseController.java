@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.mpei.parser.model.MeasData;
+import ru.mpei.parser.model.dto.FaultData;
 import ru.mpei.parser.service.AnaliseService;
 
 @RestController
@@ -22,10 +22,10 @@ public class AnaliseController {
     }
 
     @GetMapping("/data/analise")
-    public MeasData analiseMeas(@RequestParam String phAName,
-                                @RequestParam String phBName,
-                                @RequestParam String phCName,
-                                @RequestParam(required = false) Double stock) {
+    public FaultData analiseMeas(@RequestParam String phAName,
+                                 @RequestParam String phBName,
+                                 @RequestParam String phCName,
+                                 @RequestParam(required = false) Double stock) {
         if (stock==null) {
             return analiseService.analiseMeas(phAName, phBName, phCName);
         } else {

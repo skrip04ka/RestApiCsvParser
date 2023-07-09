@@ -3,10 +3,10 @@ package ru.mpei.parser.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.mpei.parser.model.MeasData;
 import ru.mpei.parser.model.MetaInf;
+import ru.mpei.parser.model.dto.FaultData;
 import ru.mpei.parser.model.measurement.ThreeMeasData;
-import ru.mpei.parser.repository.ClickHouseRepository;
+import ru.mpei.parser.repository.MeasurementsRepository;
 
 import java.util.List;
 
@@ -14,27 +14,27 @@ import java.util.List;
 @Slf4j
 public class AnaliseService {
 
-    private final ClickHouseRepository clickHouseRepository;
+    private final MeasurementsRepository measurementsRepository;
 
     @Autowired
-    public AnaliseService(ClickHouseRepository clickHouseRepository) {
-        this.clickHouseRepository = clickHouseRepository;
+    public AnaliseService(MeasurementsRepository measurementsRepository) {
+        this.measurementsRepository = measurementsRepository;
     }
 
-    public MeasData analiseMeas(String phA, String phB, String phC) {
+    public FaultData analiseMeas(String phA, String phB, String phC) {
         return analiseMeas(phA, phB, phC, 20);
     }
 
-    public MeasData analiseMeas(String phA, String phB, String phC, double stock) {
+    public FaultData analiseMeas(String phA, String phB, String phC, double stock) {
         if (stock < 1) stock = 1;
-        return analise2(clickHouseRepository.getThreeMeas(phA, phB, phC),
-                clickHouseRepository.getMetaInf(),
+        return analise2(measurementsRepository.getThreeMeas(phA, phB, phC),
+                measurementsRepository.getMetaInf(),
                 stock);
     }
 
-    private MeasData analise2(List<ThreeMeasData> measurements, MetaInf metaInf, double stock) {
+    private FaultData analise2(List<ThreeMeasData> measurements, MetaInf metaInf, double stock) {
 
-        int start = 0;
+        int start;
         if (metaInf.getN() > 0) {
             start = metaInf.getN();
         } else {
@@ -42,13 +42,13 @@ public class AnaliseService {
         }
         log.debug("start idx {}", start);
 
-        MeasData measData = new MeasData();
+        FaultData faultData = new FaultData();
 
         double set = getMax(measurements.get(start)) * (stock / 100 + 1);
-        measData.setSet(set);
+        faultData.setSet(set);
         log.debug("setting {}", set);
 
-        measData.setNormalCurrent(new ThreeMeasData(
+        faultData.setNormalCurrent(new ThreeMeasData(
                 measurements.get(start).getTime(),
                 measurements.get(start).getPhA(),
                 measurements.get(start).getPhB(),
@@ -81,14 +81,14 @@ public class AnaliseService {
         fault = fault.chars().sorted().collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append);
 
         if (faultMoment == -1) {
-            measData.setTime(-1);
-            measData.setFaultCurrent(new ThreeMeasData());
-            log.info("fault not found. result: {}", measData);
-            return measData;
+            faultData.setTime(-1);
+            faultData.setFaultCurrent(new ThreeMeasData());
+            log.info("fault not found. result: {}", faultData);
+            return faultData;
         }
 
-        measData.setTime(measurements.get(faultMoment).getTime());
-        measData.setFault(fault.toString());
+        faultData.setTime(measurements.get(faultMoment).getTime());
+        faultData.setFault(fault.toString());
 
         int steadyMoment = findStart(measurements, faultMoment, 0.01);
         log.debug("fault type {}, steady state moment {}", fault, steadyMoment);
@@ -125,7 +125,7 @@ public class AnaliseService {
             }
         }
 
-        measData.setFaultCurrent(new ThreeMeasData(
+        faultData.setFaultCurrent(new ThreeMeasData(
                 measurements.get(steadyMoment).getTime(),
                 measurements.get(steadyMoment).getPhA(),
                 measurements.get(steadyMoment).getPhB(),
@@ -133,10 +133,10 @@ public class AnaliseService {
         ));
 
 
-        log.info("Analise complete successfully. result: {}", measData);
+        log.info("Analise complete successfully. result: {}", faultData);
 
 
-        return measData;
+        return faultData;
 
     }
 
@@ -149,10 +149,9 @@ public class AnaliseService {
         if (start - 10 >= 0) {
             i = start;
         }
-        while ((measurements.get(i).getPhA() - measurements.get(i - 10).getPhA() > vel ||
+        while (i < measurements.size() && (measurements.get(i).getPhA() - measurements.get(i - 10).getPhA() > vel ||
                 measurements.get(i).getPhB() - measurements.get(i - 10).getPhB() > vel ||
-                measurements.get(i).getPhC() - measurements.get(i - 10).getPhC() > vel) &&
-                i < measurements.size()) {
+                measurements.get(i).getPhC() - measurements.get(i - 10).getPhC() > vel)) {
             i++;
         }
         return i;

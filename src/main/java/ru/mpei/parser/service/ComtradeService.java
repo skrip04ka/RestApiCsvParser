@@ -6,15 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.mpei.parser.model.CfgData;
 import ru.mpei.parser.model.Measurements;
 import ru.mpei.parser.model.MetaInf;
 import ru.mpei.parser.model.comtrade.AnalogCfg;
+import ru.mpei.parser.model.comtrade.Cfg;
 import ru.mpei.parser.model.comtrade.DigitalCfg;
 import ru.mpei.parser.model.comtrade.SamplingCfg;
 import ru.mpei.parser.model.measurement.AnalogMeas;
 import ru.mpei.parser.model.measurement.DigitalMeas;
-import ru.mpei.parser.repository.ClickHouseRepository;
+import ru.mpei.parser.repository.MeasurementsRepository;
 import ru.mpei.parser.util.ParserUtil;
 
 import java.io.BufferedReader;
@@ -31,20 +31,20 @@ public class ComtradeService {
     private String charSetName = "Windows-1251";
     @Value("${parser.digitalSuffix}")
     private String digitalSuffix = "BOOL";
-    private final ClickHouseRepository clickHouseRepository;
+    private final MeasurementsRepository measurementsRepository;
     private final RmsFilterService filterService;
 
 //    private final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy,HH:mm:ss.SSSSSS");
 
     @Autowired
-    public ComtradeService(ClickHouseRepository clickHouseRepository, RmsFilterService filterService) {
-        this.clickHouseRepository = clickHouseRepository;
+    public ComtradeService(MeasurementsRepository measurementsRepository, RmsFilterService filterService) {
+        this.measurementsRepository = measurementsRepository;
         this.filterService = filterService;
     }
 
     @SneakyThrows
     public void parseFile(MultipartFile cfg, MultipartFile dat) {
-        CfgData cfgData;
+        Cfg cfgData;
         List<Measurements> measurements = readData(dat.getInputStream(), cfgData = readCfg(cfg.getInputStream()));
 
         log.info("read data complete");
@@ -60,15 +60,15 @@ public class ComtradeService {
         metaInf.setTimeStart(cfgData.getDateStart());
         metaInf.setTimeEnd(cfgData.getDateEnd());
 
-        clickHouseRepository.saveMeas(measurements, metaInf);
+        measurementsRepository.saveMeas(measurements, metaInf);
     }
 
     @SneakyThrows
-    private CfgData readCfg(InputStream inputStream) {
+    private Cfg readCfg(InputStream inputStream) {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, charSetName));
-        CfgData cfgData = new CfgData();
+        Cfg cfg = new Cfg();
 
-        cfgData.setName(bufferedReader.readLine());
+        cfg.setName(bufferedReader.readLine());
         String[] line = bufferedReader.readLine().split(",");
 
         int aCount;
@@ -87,24 +87,24 @@ public class ComtradeService {
 
         List<AnalogCfg> analogCfgList = new ArrayList<>();
         List<DigitalCfg> digitalCfgList = new ArrayList<>();
-        Map<Integer, CfgData.DataType> dataTypes = new HashMap<>(aCount + dCount);
+        Map<Integer, Cfg.DataType> dataTypes = new HashMap<>(aCount + dCount);
 
         for (int i = 0; i < aCount + dCount; i++) {
             line = bufferedReader.readLine().split(",");
             if (line.length == 13) {
                 analogCfgList.add(getAnalogCfg(line));
-                dataTypes.put(i, CfgData.DataType.A);
+                dataTypes.put(i, Cfg.DataType.A);
             } else if (line.length == 5) {
                 digitalCfgList.add(getDigitalCfg(line));
-                dataTypes.put(i, CfgData.DataType.D);
+                dataTypes.put(i, Cfg.DataType.D);
             } else {
                 log.error("unsupported line type {}", Arrays.toString(line));
             }
         }
-        cfgData.setAnalogChannels(analogCfgList);
-        cfgData.setDigitalChannels(digitalCfgList);
-        cfgData.setDataTypes(dataTypes);
-        cfgData.setFreq(Double.parseDouble(bufferedReader.readLine()));
+        cfg.setAnalogChannels(analogCfgList);
+        cfg.setDigitalChannels(digitalCfgList);
+        cfg.setDataTypes(dataTypes);
+        cfg.setFreq(Double.parseDouble(bufferedReader.readLine()));
 
         int sCount = Integer.parseInt(bufferedReader.readLine());
         List<SamplingCfg> samplingCfgList = new ArrayList<>();
@@ -115,14 +115,14 @@ public class ComtradeService {
             samplingCfg.setLastNumber(Integer.parseInt(line[1]));
             samplingCfgList.add(samplingCfg);
         }
-        cfgData.setSamplingsFreq(samplingCfgList);
-        cfgData.setDateStart(bufferedReader.readLine());
-        cfgData.setDateEnd(bufferedReader.readLine());
+        cfg.setSamplingsFreq(samplingCfgList);
+        cfg.setDateStart(bufferedReader.readLine());
+        cfg.setDateEnd(bufferedReader.readLine());
 
-        cfgData.setFileType(bufferedReader.readLine().contains("BINARY") ? CfgData.FileType.BINARY : CfgData.FileType.ASCII);
+        cfg.setFileType(bufferedReader.readLine().contains("BINARY") ? Cfg.FileType.BINARY : Cfg.FileType.ASCII);
 
         bufferedReader.close();
-        return cfgData;
+        return cfg;
     }
 
     private AnalogCfg getAnalogCfg(String[] line) {
@@ -153,7 +153,7 @@ public class ComtradeService {
     }
 
 
-    private List<Measurements> readData(InputStream inputStream, CfgData cfg) {
+    private List<Measurements> readData(InputStream inputStream, Cfg cfg) {
         return switch (cfg.getFileType()) {
             case ASCII -> asciiRead(inputStream, cfg);
             case BINARY -> binaryRead(inputStream, cfg);
@@ -161,7 +161,7 @@ public class ComtradeService {
     }
 
     @SneakyThrows
-    private List<Measurements> binaryRead(InputStream inputStream, CfgData cfg) {
+    private List<Measurements> binaryRead(InputStream inputStream, Cfg cfg) {
         byte[] bytes = inputStream.readAllBytes();
         inputStream.close();
 
@@ -205,7 +205,7 @@ public class ComtradeService {
 
 
     @SneakyThrows
-    private List<Measurements> asciiRead(InputStream inputStream, CfgData cfg) {
+    private List<Measurements> asciiRead(InputStream inputStream, Cfg cfg) {
         BufferedReader bufferedReader = new BufferedReader(
                 new InputStreamReader(inputStream, StandardCharsets.UTF_8.newDecoder()));
 
