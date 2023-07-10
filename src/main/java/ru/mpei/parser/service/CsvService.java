@@ -51,6 +51,8 @@ public class CsvService {
         log.info("rms calculate complete with N={}", N);
 
         MetaInf metaInf = new MetaInf(N, 50);
+        if (dat.getOriginalFilename() != null)
+            metaInf.setName(dat.getOriginalFilename().split("\\.csv")[0]);
         metaInf.setFile1Name(dat.getOriginalFilename());
         metaInf.setAnalog(measurements.get(0).getAnalogMeas().size());
         metaInf.setDigital(measurements.get(0).getDigitalMeas().size());

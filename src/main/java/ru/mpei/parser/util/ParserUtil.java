@@ -13,10 +13,11 @@ public class ParserUtil {
     }
 
     public static String toCorrectStr(String str) {
-        return toLatinTrans.transliterate(str)
-                .replaceAll("\\.", "_")
-                .replaceAll("№", "N")
-                .replaceAll("[^a-zA-Z0-9_]", "");
+//        return toLatinTrans.transliterate(str)
+//                .replaceAll("\\.", "_")
+//                .replaceAll("№", "N")
+//                .replaceAll("[^a-zA-Z0-9_]", "");
+        return str.replaceAll(" ", "");
     }
 
     public static int bArrTo16Int(byte[] b, int offset) {

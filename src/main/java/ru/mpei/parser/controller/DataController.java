@@ -3,8 +3,9 @@ package ru.mpei.parser.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.mpei.parser.model.dto.MeasList;
 import ru.mpei.parser.model.MetaInf;
+import ru.mpei.parser.model.dto.FileInfo;
+import ru.mpei.parser.model.dto.MeasList;
 import ru.mpei.parser.service.RepositoryService;
 
 import java.util.List;
@@ -22,26 +23,31 @@ public class DataController {
     }
 
 
-    @PostMapping("/data/get-data")
-    public List<MeasList> getDataAll(@RequestParam List<String> names,
+    @PostMapping("/data/get-data/{id}")
+    public List<MeasList> getDataAll(@PathVariable Long id,
+                                     @RequestParam List<String> names,
                                      @RequestParam Integer start,
                                      @RequestParam Integer end) {
-        List<MeasList> list = repositoryService.getMeasByName(names, start, end);
+        List<MeasList> list = repositoryService.getMeasByName(id, names, start, end);
         log.info("send all data len {}, analogMeas = {}, digital meas = {}", list.size(),
                 list.get(0).getMeas().size(),
                 list.get(0).getDmeas().size());
         return list;
     }
 
-    @GetMapping("/data/names")
-    public List<String> getMeasName() {
-        return repositoryService.getMeasName();
+    @GetMapping("/data/names/{id}")
+    public List<String> getMeasName(@PathVariable Long id) {
+        return repositoryService.getMeasName(id);
     }
 
-    @GetMapping("/data/meta-inf")
-    public MetaInf getMetaInf() {
-        return repositoryService.getMetaInf();
+    @GetMapping("/data/meta-inf/{id}")
+    public MetaInf getMetaInf(@PathVariable Long id) {
+        return repositoryService.getMetaInf(id);
     }
 
+    @GetMapping("/data/files")
+    public List<FileInfo> getMeasName() {
+        return repositoryService.getFilesInfo();
+    }
 
 }

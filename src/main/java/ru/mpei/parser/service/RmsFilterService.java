@@ -3,8 +3,8 @@ package ru.mpei.parser.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.mpei.parser.model.measurement.AnalogMeas;
 import ru.mpei.parser.model.Measurements;
+import ru.mpei.parser.model.measurement.AnalogMeas;
 
 import java.util.ArrayList;
 import java.util.HashMap;

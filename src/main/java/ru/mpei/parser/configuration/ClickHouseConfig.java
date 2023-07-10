@@ -7,6 +7,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionException;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.SimpleTransactionStatus;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -30,6 +36,11 @@ public class ClickHouseConfig {
     @Bean
     public DataSource dataSource() throws SQLException {
         return new ClickHouseDataSource(format("jdbc:ch:http://%s:%s", host, port));
+    }
+
+    @Bean
+    public DataSourceTransactionManager txManager(DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
     }
 
 }

@@ -34,8 +34,6 @@ public class ComtradeService {
     private final MeasurementsRepository measurementsRepository;
     private final RmsFilterService filterService;
 
-//    private final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy,HH:mm:ss.SSSSSS");
-
     @Autowired
     public ComtradeService(MeasurementsRepository measurementsRepository, RmsFilterService filterService) {
         this.measurementsRepository = measurementsRepository;
@@ -52,6 +50,8 @@ public class ComtradeService {
         log.info("rms calculate complete with N={}", N);
 
         MetaInf metaInf = new MetaInf(N, cfgData.getFreq());
+        if (cfg.getOriginalFilename() != null)
+            metaInf.setName(cfg.getOriginalFilename().split("\\.cfg")[0]);
         metaInf.setFile1Name(cfg.getOriginalFilename());
         metaInf.setFile2Name(dat.getOriginalFilename());
         metaInf.setAnalog(cfgData.getAnalogChannels().size());
@@ -192,7 +192,7 @@ public class ComtradeService {
                     if (cfg.getDigitalChannels().size() < j * 16 + k) break;
                     digitalMeas.add(new DigitalMeas(cfg.getDigitalChannels().get(j * 16 + k).getChannelId(), arr.get(k)));
                 }
-                i=i+2;
+                i = i + 2;
             }
             meas.setDigitalMeas(digitalMeas);
 

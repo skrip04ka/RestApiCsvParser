@@ -21,18 +21,19 @@ public class AnaliseService {
         this.measurementsRepository = measurementsRepository;
     }
 
-    public FaultData analiseMeas(String phA, String phB, String phC) {
-        return analiseMeas(phA, phB, phC, 20);
+    public FaultData analiseMeas(long id, String phA, String phB, String phC) {
+        return analiseMeas(id, phA, phB, phC, 20);
     }
 
-    public FaultData analiseMeas(String phA, String phB, String phC, double stock) {
+    public FaultData analiseMeas(long id, String phA, String phB, String phC, double stock) {
         if (stock < 1) stock = 1;
-        return analise2(measurementsRepository.getThreeMeas(phA, phB, phC),
-                measurementsRepository.getMetaInf(),
+
+        return analise(measurementsRepository.getThreeMeas(id, phA, phB, phC),
+                measurementsRepository.getMetaInf(id).orElseThrow(),
                 stock);
     }
 
-    private FaultData analise2(List<ThreeMeasData> measurements, MetaInf metaInf, double stock) {
+    private FaultData analise(List<ThreeMeasData> measurements, MetaInf metaInf, double stock) {
 
         int start;
         if (metaInf.getN() > 0) {
