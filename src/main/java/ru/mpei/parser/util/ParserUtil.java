@@ -1,7 +1,5 @@
 package ru.mpei.parser.util;
 
-import com.ibm.icu.text.Transliterator;
-
 import java.util.ArrayList;
 import java.util.List;
 
