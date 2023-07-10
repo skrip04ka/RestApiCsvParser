@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ParserUtil {
 
-    private static final Transliterator toLatinTrans = Transliterator.getInstance("Russian-Latin/BGN");
+//    private static final Transliterator toLatinTrans = Transliterator.getInstance("Russian-Latin/BGN");
 
     private ParserUtil() {
     }

@@ -21,9 +21,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @Repository
 public class MeasurementsRepositoryImpl implements MeasurementsRepository {
-
-    @Value("${parser.digitalSuffix}")
-    private String digitalSuffix = "BOOL";
     private final NamedParameterJdbcTemplate template;
     @Value("${clickhouse.table.name}")
     private String table;
@@ -67,10 +64,6 @@ public class MeasurementsRepositoryImpl implements MeasurementsRepository {
         Long id = template.queryForObject("select max(id) from " + table,
                 Map.of(), Long.class);
         return id == null ? 0 : id + 1;
-    }
-
-    public void removeById(long id) {
-
     }
 
     @Override

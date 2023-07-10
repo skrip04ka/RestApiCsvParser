@@ -4,7 +4,6 @@ import ru.mpei.parser.model.Measurements;
 import ru.mpei.parser.model.MetaInf;
 import ru.mpei.parser.model.dto.FileInfo;
 import ru.mpei.parser.model.dto.MeasByName;
-import ru.mpei.parser.model.dto.MeasList;
 import ru.mpei.parser.model.measurement.ThreeMeasData;
 
 import java.util.List;
