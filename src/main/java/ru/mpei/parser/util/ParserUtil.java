@@ -1,20 +1,20 @@
 package ru.mpei.parser.util;
 
+import ru.mpei.parser.model.Measurements;
+import ru.mpei.parser.model.measurement.AnalogMeas;
+import ru.mpei.parser.model.measurement.DigitalMeas;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ParserUtil {
-
-//    private static final Transliterator toLatinTrans = Transliterator.getInstance("Russian-Latin/BGN");
 
     private ParserUtil() {
     }
 
     public static String toCorrectStr(String str) {
-//        return toLatinTrans.transliterate(str)
-//                .replaceAll("\\.", "_")
-//                .replaceAll("№", "N")
-//                .replaceAll("[^a-zA-Z0-9_]", "");
         return str.replaceAll(" ", "");
     }
 
@@ -41,6 +41,23 @@ public class ParserUtil {
         arr.addAll(bArrTo8Bit(b, offset));
         arr.addAll(bArrTo8Bit(b, offset+1));
         return arr;
+    }
+
+    public static Map<String, List<Double>> convert(List<Measurements> measurements) {
+        Map<String, List<Double>> valuesByName = new HashMap<>();
+        for(Measurements m: measurements) {
+            valuesByName.computeIfAbsent("time", v -> new ArrayList<>()).add(m.getTime());
+            for (AnalogMeas am:m.getAnalogMeas()) {
+                valuesByName.computeIfAbsent(am.getName(), v -> new ArrayList<>()).add(am.getVal());
+            }
+            for (AnalogMeas am:m.getRmsMeas()) {
+                valuesByName.computeIfAbsent(am.getName(), v -> new ArrayList<>()).add(am.getVal());
+            }
+            for (DigitalMeas am:m.getDigitalMeas()) {
+                valuesByName.computeIfAbsent(am.getName(), v -> new ArrayList<>()).add(am.isVal() ? 1.0 : 0.0);
+            }
+        }
+        return valuesByName;
     }
 
 

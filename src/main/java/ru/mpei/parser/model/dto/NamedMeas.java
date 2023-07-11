@@ -5,8 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class MeasByName {
-    private double time;
-    private String[] names;
-    private double[] values;
+public class NamedMeas {
+    private String name;
+    private Double[] values;
 }

@@ -1,10 +1,11 @@
-package ru.mpei.parser.service;
+package ru.mpei.parser.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.mpei.parser.model.Measurements;
 import ru.mpei.parser.model.measurement.AnalogMeas;
+import ru.mpei.parser.service.FilterService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +14,7 @@ import java.util.Map;
 
 @Service
 @Slf4j
-public class RmsFilterService {
+public class RmsFilterService implements FilterService {
     @Value("${filter.rmsSuffix}")
     private String rmsSuffix = "RMS";
 
@@ -23,7 +24,8 @@ public class RmsFilterService {
     }
 
 
-    public int rmsByPhase(List<Measurements> measurementList, double freq) {
+    @Override
+    public int calculate(List<Measurements> measurementList, double freq) {
 
         if (measurementList.size() < 2) {
             log.warn("measurementList.size() < 2");

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.mpei.parser.model.MetaInf;
 import ru.mpei.parser.model.dto.FileInfo;
 import ru.mpei.parser.model.dto.MeasList;
-import ru.mpei.parser.service.RepositoryService;
+import ru.mpei.parser.service.MeasurementsService;
 
 import java.util.List;
 
@@ -15,11 +15,11 @@ import java.util.List;
 @Slf4j
 public class DataController {
 
-    private final RepositoryService repositoryService;
+    private final MeasurementsService measurementsService;
 
     @Autowired
-    public DataController(RepositoryService repositoryService) {
-        this.repositoryService = repositoryService;
+    public DataController(MeasurementsService measurementsService) {
+        this.measurementsService = measurementsService;
     }
 
 
@@ -28,7 +28,7 @@ public class DataController {
                                      @RequestParam List<String> names,
                                      @RequestParam Integer start,
                                      @RequestParam Integer end) {
-        List<MeasList> list = repositoryService.getMeasByName(id, names, start, end);
+        List<MeasList> list = measurementsService.getMeasByName(id, names, start, end);
         log.info("send all data len {}, analogMeas = {}, digital meas = {}", list.size(),
                 list.get(0).getMeas().size(),
                 list.get(0).getDmeas().size());
@@ -37,17 +37,17 @@ public class DataController {
 
     @GetMapping("/data/names/{id}")
     public List<String> getMeasName(@PathVariable Long id) {
-        return repositoryService.getMeasName(id);
+        return measurementsService.getMeasName(id);
     }
 
     @GetMapping("/data/meta-inf/{id}")
     public MetaInf getMetaInf(@PathVariable Long id) {
-        return repositoryService.getMetaInf(id);
+        return measurementsService.getMetaInf(id);
     }
 
     @GetMapping("/data/files")
     public List<FileInfo> getMeasName() {
-        return repositoryService.getFilesInfo();
+        return measurementsService.getFilesInfo();
     }
 
 }

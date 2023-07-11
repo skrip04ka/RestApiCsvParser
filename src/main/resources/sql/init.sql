@@ -1,21 +1,26 @@
-drop table if exists measurement.meas;
+drop table if exists meta_inf cascade;
 
-create table if not exists measurement.meas
+drop table if exists measurements;
+
+CREATE TABLE meta_inf
 (
-    id      INTEGER,
-    time_id INTEGER,
-    time    DOUBLE,
-    values Map(String, DOUBLE)
-)
-    ENGINE = MergeTree order by (id);
+    meta_id    serial PRIMARY KEY,
+    name       varchar(100),
+    n          int,
+    freq       double precision,
+    digital    int,
+    analog     int,
+    time_start varchar(100),
+    time_end   varchar(100),
+    type       varchar(100)
 
-drop table if exists measurement.meta_inf;
+);
 
-create table if not exists measurement.meta_inf
+CREATE TABLE measurements
 (
-    id   INTEGER,
-    name String,
-    meta String,
-    names Array(String)
-)
-    ENGINE = MergeTree order by (id);
+    meas_id   serial PRIMARY KEY,
+    meta_id   int,
+    meas_name varchar(100),
+    values    double precision[],
+    FOREIGN KEY (meta_id) REFERENCES meta_inf (meta_id)
+);

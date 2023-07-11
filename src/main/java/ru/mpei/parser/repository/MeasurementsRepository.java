@@ -1,22 +1,21 @@
 package ru.mpei.parser.repository;
 
-import ru.mpei.parser.model.Measurements;
 import ru.mpei.parser.model.MetaInf;
 import ru.mpei.parser.model.dto.FileInfo;
-import ru.mpei.parser.model.dto.MeasByName;
-import ru.mpei.parser.model.measurement.ThreeMeasData;
+import ru.mpei.parser.model.dto.NamedMeas;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface MeasurementsRepository {
-    void saveMeas(List<Measurements> measurements, MetaInf metaInf);
+    void saveMeas(Map<String, List<Double>> valuesByName, MetaInf metaInf);
 
-    Optional<List<String>> getMeasNames(long id);
+    List<String> getMeasNames(long id);
 
-    List<MeasByName> getMeasByNames(long id, List<String> names, int start, int end);
+    List<NamedMeas> getMeasByNamesAndRange(long id, List<String> names, int start, int end);
 
-    List<ThreeMeasData> getThreeMeas(long id, String phA, String phB, String phC);
+    List<NamedMeas> getMeasByNames(long id, List<String> names);
 
     Optional<MetaInf> getMetaInf(long id);
 
