@@ -12,4 +12,5 @@ public class ThreeMeasData {
     private double phA;
     private double phB;
     private double phC;
+
 }
