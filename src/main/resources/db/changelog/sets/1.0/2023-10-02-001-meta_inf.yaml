@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2023-10-02-001-meta_inf
+      author: skrip04ka
+      changes:
+        - createTable:
+            tableName: meta_inf
+            columns:
+              - column:
+                  name: meta_id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(100)
+              - column:
+                  name: n
+                  type: int
+              - column:
+                  name: freq
+                  type: double precision
+              - column:
+                  name: digital
+                  type: int
+              - column:
+                  name: analog
+                  type: int
+              - column:
+                  name: time_start
+                  type: varchar(100)
+              - column:
+                  name: time_end
+                  type: varchar(100)
+              - column:
+                  name: type
+                  type: varchar(100)

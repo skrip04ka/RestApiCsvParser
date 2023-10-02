@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - includeAll:
+      context: prod
+      path: db/changelog/sets/1.0

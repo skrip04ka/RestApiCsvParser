@@ -3,6 +3,7 @@ package ru.mpei.parser.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mpei.parser.model.MetaInf;
 import ru.mpei.parser.model.dto.FaultData;
 import ru.mpei.parser.model.dto.NamedMeas;
@@ -23,11 +24,14 @@ public class AnaliseServiceImpl implements AnaliseService {
         this.measurementsRepository = measurementsRepository;
     }
 
-    @Override public FaultData analiseMeas(long id, String phA, String phB, String phC) {
+    @Override
+    public FaultData analiseMeas(long id, String phA, String phB, String phC) {
         return analiseMeas(id, phA, phB, phC, 20);
     }
 
-    @Override public FaultData analiseMeas(long id, String phA, String phB, String phC, double stock) {
+    @Override
+    @Transactional(readOnly = true)
+    public FaultData analiseMeas(long id, String phA, String phB, String phC, double stock) {
         if (stock < 1) stock = 1;
 
         MetaInf metaInf = measurementsRepository.getMetaInf(id).orElseThrow();
