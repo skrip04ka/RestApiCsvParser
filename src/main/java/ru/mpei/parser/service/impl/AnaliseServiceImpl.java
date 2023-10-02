@@ -25,6 +25,7 @@ public class AnaliseServiceImpl implements AnaliseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public FaultData analiseMeas(long id, String phA, String phB, String phC) {
         return analiseMeas(id, phA, phB, phC, 20);
     }
