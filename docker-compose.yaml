@@ -1,0 +1,39 @@
+version: "3.7"
+
+volumes:
+  db-data:
+
+services:
+
+  database:
+    image: postgres:13
+    ports:
+      - 5445:5432
+    environment:
+      - PGUSER=dev
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=meas
+    healthcheck:
+      test: "pg_isready -h database"
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    restart: always
+
+  backend:
+    image: skrip04ka/comtrade-back
+    ports:
+      - 9005:9005
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database/meas
+
+  frontend:
+    image: skrip04ka/comtrade-front
+    ports:
+      - 4200:4200
+    restart: always
