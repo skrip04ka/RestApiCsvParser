@@ -3,6 +3,7 @@ package ru.mpei.parser.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mpei.parser.model.MetaInf;
 import ru.mpei.parser.model.dto.FileInfo;
 import ru.mpei.parser.model.dto.NamedMeas;
@@ -28,7 +29,9 @@ public class MeasurementsServiceImpl implements MeasurementsService {
         this.measurementsRepository = measurementsRepository;
     }
 
-    @Override public List<MeasList> getMeasByName(long id, List<String> names, int start, int end) {
+    @Override
+    @Transactional(readOnly = true)
+    public List<MeasList> getMeasByName(long id, List<String> names, int start, int end) {
         if (start - end > 60000) end = start + 60000;
 
         List<NamedMeas> namedMeas = measurementsRepository.getMeasByNamesAndRange(id, names, start, end);
@@ -61,15 +64,21 @@ public class MeasurementsServiceImpl implements MeasurementsService {
         return res;
     }
 
-    @Override public MetaInf getMetaInf(long id) {
+    @Override
+    @Transactional(readOnly = true)
+    public MetaInf getMetaInf(long id) {
         return measurementsRepository.getMetaInf(id).orElseThrow();
     }
 
-    @Override public List<String> getMeasName(long id) {
+    @Override
+    @Transactional(readOnly = true)
+    public List<String> getMeasName(long id) {
         return measurementsRepository.getMeasNames(id);
     }
 
-    @Override public List<FileInfo> getFilesInfo() {
+    @Override
+    @Transactional(readOnly = true)
+    public List<FileInfo> getFilesInfo() {
         return measurementsRepository.getFilesInfo();
     }
 }

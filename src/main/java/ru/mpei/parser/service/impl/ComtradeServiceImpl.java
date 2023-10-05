@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mpei.parser.model.Measurements;
 import ru.mpei.parser.model.MetaInf;
@@ -41,7 +42,9 @@ public class ComtradeServiceImpl implements ComtradeService {
         this.filterService = filterService;
     }
 
-    @Override@SneakyThrows
+    @Override
+    @SneakyThrows
+    @Transactional
     public void parseFile(MultipartFile cfg, MultipartFile dat) {
         Cfg cfgData;
         List<Measurements> measurements = readData(dat.getInputStream(), cfgData = readCfg(cfg.getInputStream()));

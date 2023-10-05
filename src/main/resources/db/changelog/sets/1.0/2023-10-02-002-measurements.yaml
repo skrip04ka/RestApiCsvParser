@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2023-10-02-002-measurements
+      author: skrip04ka
+      changes:
+        - createTable:
+            tableName: measurements
+            columns:
+              - column:
+                  name: meas_id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: meas_name
+                  type: varchar(100)
+              - column:
+                  name: values
+                  type: DOUBLE_ARRAY
+              - column:
+                  name: meta_id
+                  type: int
+                  constraints:
+                    foreignKeyName: fk_meas_meta_id
+                    references: meta_inf(meta_id)
+        - modifySql:
+            dbms: postgresql
+            replace:
+              replace: DOUBLE_ARRAY
+              with: double precision[]

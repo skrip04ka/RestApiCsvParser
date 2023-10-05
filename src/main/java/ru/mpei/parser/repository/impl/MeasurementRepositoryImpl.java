@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.mpei.parser.model.MetaInf;
 import ru.mpei.parser.model.dto.FileInfo;
 import ru.mpei.parser.model.dto.NamedMeas;
@@ -27,7 +26,6 @@ public class MeasurementRepositoryImpl implements MeasurementsRepository {
     }
 
     @Override
-    @Transactional
     public void saveMeas(Map<String, List<Double>> valuesByName, MetaInf metaInf) {
         KeyHolder holder = new GeneratedKeyHolder();
         template.update("insert into meta_inf (name, n, freq, digital, analog, time_start, time_end, type) " +
@@ -102,7 +100,6 @@ public class MeasurementRepositoryImpl implements MeasurementsRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<String> getMeasNames(long id) {
         return template.queryForList("select meas_name from measurements " +
                         " join meta_inf mi on mi.meta_id = measurements.meta_id " +
@@ -111,7 +108,6 @@ public class MeasurementRepositoryImpl implements MeasurementsRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<NamedMeas> getMeasByNamesAndRange(long id, List<String> names, int start, int end) {
         return template.query("select meas_name, values[ :start : :end ] from measurements " +
                         " join meta_inf mi on mi.meta_id = measurements.meta_id " +
@@ -122,7 +118,6 @@ public class MeasurementRepositoryImpl implements MeasurementsRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<NamedMeas> getMeasByNames(long id, List<String> names) {
         return template.query("select meas_name, values from measurements " +
                         " join meta_inf mi on mi.meta_id = measurements.meta_id " +
@@ -133,7 +128,6 @@ public class MeasurementRepositoryImpl implements MeasurementsRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<MetaInf> getMetaInf(long id) {
         return Optional.ofNullable(template.queryForObject(
                 "select * from meta_inf where meta_id = :id ",
@@ -151,7 +145,6 @@ public class MeasurementRepositoryImpl implements MeasurementsRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<FileInfo> getFilesInfo() {
         return template.query("select meta_id, name from meta_inf",
                 Map.of(), (rs, rowNum) -> new FileInfo(
