@@ -2,6 +2,8 @@ package ru.mpei.parser.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.mpei.parser.model.converter.ValuesConverter;
+import ru.mpei.parser.model.enums.SignalType;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,7 +18,11 @@ import java.util.UUID;
 public class Measurement {
     @EmbeddedId
     private Key key;
+
+    @Column
     private int number;
+
+    @Column
     private String name;
 
     @Convert(converter = ValuesConverter.class)
@@ -28,8 +34,8 @@ public class Measurement {
     @EqualsAndHashCode
     @AllArgsConstructor
     public static class Key implements Serializable {
-        @Column(name = "file_info_id")
-        private UUID fileInfoId;
+        @Column(name = "file_id")
+        private UUID fileId;
 
         private int signalNumber;
 

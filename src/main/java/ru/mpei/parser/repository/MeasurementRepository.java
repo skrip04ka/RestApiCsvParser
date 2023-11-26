@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import ru.mpei.parser.dto.view.MeasurementInfoView;
 import ru.mpei.parser.mapper.MeasurementMapper;
-import ru.mpei.parser.model.FileInfo;
+import ru.mpei.parser.model.File;
 import ru.mpei.parser.model.Measurement;
 
 
@@ -22,34 +22,34 @@ public class MeasurementRepository {
     @PersistenceContext
     private EntityManager em;
 
-    public void saveFile(FileInfo fileInfo) {
-        em.persist(fileInfo);
+    public void saveFile(File file) {
+        em.persist(file);
     }
 
 
-    public List<FileInfo> getFilesInfo() {
-        return em.createQuery("select f from FileInfo f", FileInfo.class)
+    public List<File> getFiles() {
+        return em.createQuery("select f from File f", File.class)
                 .getResultList();
     }
 
-    public Optional<FileInfo> getFileInfoById(UUID fileInfoId) {
-        return Optional.ofNullable(em.find(FileInfo.class, fileInfoId));
+    public Optional<File> getFileById(UUID fileId) {
+        return Optional.ofNullable(em.find(File.class, fileId));
     }
 
-    public List<Measurement> getMeasurementsByFileInfoIdAndSignalNumbers(UUID fileInfoId, List<Integer> signalNumbers) {
+    public List<Measurement> getMeasurementsByFileIdAndSignalNumbers(UUID fileId, List<Integer> signalNumbers) {
         return em.createQuery("select m from Measurement m " +
-                                "where m.key.fileInfoId = :fileInfoId " +
+                                "where m.key.fileId = :fileId " +
                                 "and m.key.signalNumber in :signalNumbers ",
                         Measurement.class)
-                .setParameter("fileInfoId", fileInfoId)
+                .setParameter("fileId", fileId)
                 .setParameter("signalNumbers", signalNumbers)
                 .getResultList();
     }
 
-    public List<MeasurementInfoView> getMeasurementsInfo(UUID fileInfoId) {
+    public List<MeasurementInfoView> getMeasurementsInfo(UUID fileId) {
         return em.createQuery("select m.key, m.name, m.number from Measurement m " +
-                        "where m.key.fileInfoId = :fileInfoId order by m.key.signalNumber", Tuple.class)
-                .setParameter("fileInfoId", fileInfoId)
+                        "where m.key.fileId = :fileId order by m.key.signalNumber", Tuple.class)
+                .setParameter("fileId", fileId)
                 .getResultList()
                 .stream()
                 .map(t -> MeasurementInfoView.builder()
@@ -60,9 +60,9 @@ public class MeasurementRepository {
                 .toList();
     }
 
-    public void deleteFileInfo(UUID fileInfoId) {
-        em.createQuery("delete FileInfo f where f.id = :fileInfoId")
-                .setParameter("fileInfoId", fileInfoId)
+    public void deleteFile(UUID fileId) {
+        em.createQuery("delete File f where f.id = :fileId")
+                .setParameter("fileId", fileId)
                 .executeUpdate();
     }
 }

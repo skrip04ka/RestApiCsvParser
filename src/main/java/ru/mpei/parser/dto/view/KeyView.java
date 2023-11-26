@@ -3,7 +3,7 @@ package ru.mpei.parser.dto.view;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.mpei.parser.model.SignalType;
+import ru.mpei.parser.model.enums.SignalType;
 
 import java.util.UUID;
 

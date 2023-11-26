@@ -29,6 +29,6 @@ public class MeasurementMapper {
     }
 
     public static KeyView mapToKeyView(Measurement.Key key) {
-        return new KeyView(key.getFileInfoId(), key.getSignalNumber(), key.getType());
+        return new KeyView(key.getFileId(), key.getSignalNumber(), key.getType());
     }
 }

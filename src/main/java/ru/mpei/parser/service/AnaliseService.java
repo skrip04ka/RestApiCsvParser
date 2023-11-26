@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mpei.parser.dto.FileInfoDto;
+import ru.mpei.parser.dto.FileDto;
 import ru.mpei.parser.dto.analise.FaultData;
 import ru.mpei.parser.dto.analise.FaultPhasesNumber;
 import ru.mpei.parser.dto.analise.ThreePhaseData;
@@ -37,10 +37,10 @@ public class AnaliseService {
     public FaultData analiseMeas(UUID fileInfoId, FaultPhasesNumber faultPhasesNumber, double stock) {
         if (stock < 1) stock = 1;
 
-        FileInfoDto fileInfoDto = FileMapper.mapToFileInfoDto(measurementsRepository
-                .getFileInfoById(fileInfoId).orElseThrow());
+        FileDto fileDto = FileMapper.mapToFileInfoDto(measurementsRepository
+                .getFileById(fileInfoId).orElseThrow());
         List<MeasurementView> measurement = measurementsRepository
-                .getMeasurementsByFileInfoIdAndSignalNumbers(fileInfoId, faultPhasesNumber.getPhasesNumber())
+                .getMeasurementsByFileIdAndSignalNumbers(fileInfoId, faultPhasesNumber.getPhasesNumber())
                 .stream()
                 .map(MeasurementMapper::mapToMeasurementView)
                 .toList();
@@ -53,7 +53,7 @@ public class AnaliseService {
             time.add(i);
         }
 
-        return analise(time, pha, phb, phc, fileInfoDto.getN(), stock);
+        return analise(time, pha, phb, phc, fileDto.getN(), stock);
     }
 
 

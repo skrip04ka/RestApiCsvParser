@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.mpei.parser.dto.FileInfoDto;
+import ru.mpei.parser.dto.FileDto;
 import ru.mpei.parser.dto.Range;
 import ru.mpei.parser.dto.view.MeasurementInfoView;
 import ru.mpei.parser.dto.view.MeasurementView;
@@ -45,18 +45,18 @@ public class DataController {
     }
 
     @GetMapping("/file/{id}/info")
-    public FileInfoDto getFileInfo(@PathVariable UUID id) {
-        return measurementsService.getFileInfo(id);
+    public FileDto getFileInfo(@PathVariable UUID id) {
+        return measurementsService.getFile(id);
     }
 
     @GetMapping("/files")
-    public List<FileInfoDto> getFilesInfo() {
-        return measurementsService.getFilesInfo();
+    public List<FileDto> getFilesInfo() {
+        return measurementsService.getFiles();
     }
 
     @DeleteMapping("/file/{id}/delete")
     public void deleteFile(@PathVariable UUID id) {
-        measurementsService.deleteFileInfo(id);
+        measurementsService.deleteFile(id);
     }
 
     @Data

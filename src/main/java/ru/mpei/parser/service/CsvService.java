@@ -1,6 +1,5 @@
 package ru.mpei.parser.service;
 
-import lombok.SneakyThrows;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,16 +7,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import ru.mpei.parser.dto.FileInfoDto;
-import ru.mpei.parser.dto.data.MeasData;
+import ru.mpei.parser.dto.FileDto;
 import ru.mpei.parser.dto.data.AnalogMeasData;
 import ru.mpei.parser.dto.data.DigitalMeasData;
+import ru.mpei.parser.dto.data.MeasData;
 import ru.mpei.parser.mapper.FileMapper;
-import ru.mpei.parser.model.FileType;
+import ru.mpei.parser.model.enums.FileType;
 import ru.mpei.parser.repository.MeasurementRepository;
 import ru.mpei.parser.service.filter.RmsFilterService;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -38,29 +38,29 @@ public class CsvService {
         this.filterService = filterService;
     }
 
-    @SneakyThrows
     @Transactional
     public void parseFile(MultipartFile dat) {
-        BufferedReader bufferedReader = new BufferedReader(
-                new InputStreamReader(dat.getInputStream(), StandardCharsets.UTF_8.newDecoder()));
-
-        List<MeasData> measurements = parseData(bufferedReader, parseHeader(bufferedReader.readLine()));
-
-        bufferedReader.close();
-
+        List<MeasData> measurements;
+        try (BufferedReader bufferedReader = new BufferedReader(
+                new InputStreamReader(dat.getInputStream(), StandardCharsets.UTF_8.newDecoder()))) {
+            measurements = parseData(bufferedReader, parseHeader(bufferedReader.readLine()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         log.info("read data complete");
         int N = filterService.calculate(measurements, 50);
         log.info("rms calculate complete with N={}", N);
 
-        FileInfoDto fileInfoDto = new FileInfoDto(N, 50);
-        if (dat.getOriginalFilename() != null)
-            fileInfoDto.setName(dat.getOriginalFilename().split("\\.csv")[0]);
-        fileInfoDto.setAnalogNumber(measurements.get(0).getAnalogMeas().size());
-        fileInfoDto.setDigitalNumber(measurements.get(0).getDigitalMeas().size());
-        fileInfoDto.setType(FileType.CSV);
+        FileDto fileDto = FileDto.builder()
+                .name((dat.getOriginalFilename() != null) ? dat.getOriginalFilename().split("\\.csv")[0] : null)
+                .n(N)
+                .freq(50)
+                .analogNumber(measurements.get(0).getAnalogMeas().size())
+                .digitalNumber(measurements.get(0).getDigitalMeas().size())
+                .type(FileType.CSV)
+                .build();
 
-        measurementsRepository.saveFile(FileMapper.mapToFileInfo(fileInfoDto, measurements));
-
+        measurementsRepository.saveFile(FileMapper.mapToFileInfo(fileDto, measurements));
     }
 
     private HeaderData parseHeader(String header) {
@@ -86,8 +86,7 @@ public class CsvService {
         return s.toLowerCase().contains(analogKeyword) ? CsvSignalType.ANALOG : CsvSignalType.DIGITAL;
     }
 
-    @SneakyThrows
-    private List<MeasData> parseData(BufferedReader bufferedReader, HeaderData headerData) {
+    private List<MeasData> parseData(BufferedReader bufferedReader, HeaderData headerData) throws IOException {
         String line;
         List<MeasData> measurements = new ArrayList<>();
 

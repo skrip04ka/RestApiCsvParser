@@ -1,4 +1,4 @@
-package ru.mpei.parser.model;
+package ru.mpei.parser.model.converter;
 
 import jakarta.persistence.AttributeConverter;
 import lombok.SneakyThrows;

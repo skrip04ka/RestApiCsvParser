@@ -7,11 +7,11 @@ databaseChangeLog:
             tableName: measurements
             columns:
               - column:
-                  name: file_info_id
+                  name: file_id
                   type: uuid
                   constraints:
-                    foreignKeyName: fk_meas_file_info_id
-                    references: file_info(id)
+                    foreignKeyName: fk_meas_file_id
+                    references: files(id)
                     deleteCascade: true
               - column:
                   name: type
@@ -30,7 +30,6 @@ databaseChangeLog:
                   type: float8[]
         - addPrimaryKey:
             clustered: true
-            columnNames: file_info_id, signal_number, type
+            columnNames: file_id, signal_number, type
             constraintName: pk_measurements
             tableName: measurements
-            validate: true

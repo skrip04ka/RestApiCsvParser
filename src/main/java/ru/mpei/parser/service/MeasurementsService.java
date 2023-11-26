@@ -3,7 +3,7 @@ package ru.mpei.parser.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mpei.parser.dto.FileInfoDto;
+import ru.mpei.parser.dto.FileDto;
 import ru.mpei.parser.dto.Range;
 import ru.mpei.parser.dto.view.MeasurementInfoView;
 import ru.mpei.parser.dto.view.MeasurementView;
@@ -23,34 +23,34 @@ public class MeasurementsService {
     }
 
     @Transactional(readOnly = true)
-    public List<MeasurementView> getMeasWithValuesByRange(UUID fileInfoId, List<Integer> signalNumbers, Range range) {
+    public List<MeasurementView> getMeasWithValuesByRange(UUID fileId, List<Integer> signalNumbers, Range range) {
         int MAX_SIZE = 50_000;
         range.setEnd(Math.min(range.getEnd() - range.getStart(), MAX_SIZE) + range.getStart());
         return measurementsRepository
-                .getMeasurementsByFileInfoIdAndSignalNumbers(fileInfoId, signalNumbers).stream()
+                .getMeasurementsByFileIdAndSignalNumbers(fileId, signalNumbers).stream()
                 .map(m -> MeasurementMapper.mapToMeasurementViewAndSplitValues(m, range))
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public FileInfoDto getFileInfo(UUID id) {
-        return FileMapper.mapToFileInfoDto(measurementsRepository.getFileInfoById(id).orElseThrow());
+    public FileDto getFile(UUID fileId) {
+        return FileMapper.mapToFileInfoDto(measurementsRepository.getFileById(fileId).orElseThrow());
     }
 
     @Transactional(readOnly = true)
-    public List<MeasurementInfoView> getMeasurementsInfo(UUID fileInfoId) {
-        return measurementsRepository.getMeasurementsInfo(fileInfoId);
+    public List<MeasurementInfoView> getMeasurementsInfo(UUID fileId) {
+        return measurementsRepository.getMeasurementsInfo(fileId);
     }
 
     @Transactional(readOnly = true)
-    public List<FileInfoDto> getFilesInfo() {
-        return measurementsRepository.getFilesInfo().stream()
+    public List<FileDto> getFiles() {
+        return measurementsRepository.getFiles().stream()
                 .map(FileMapper::mapToFileInfoDto)
                 .toList();
     }
 
     @Transactional
-    public void deleteFileInfo(UUID fileInfoId) {
-        measurementsRepository.deleteFileInfo(fileInfoId);
+    public void deleteFile(UUID fileId) {
+        measurementsRepository.deleteFile(fileId);
     }
 }

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.mpei.parser.model.FileType;
+import ru.mpei.parser.model.enums.FileType;
 
 import java.util.UUID;
 
@@ -12,7 +12,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FileInfoDto {
+public class FileDto {
     private UUID id;
     private int n;
     private double freq;
@@ -22,9 +22,4 @@ public class FileInfoDto {
     private String timeStart;
     private String timeEnd;
     private FileType type;
-
-    public FileInfoDto(int n, double freq) {
-        this.n = n;
-        this.freq = freq;
-    }
 }

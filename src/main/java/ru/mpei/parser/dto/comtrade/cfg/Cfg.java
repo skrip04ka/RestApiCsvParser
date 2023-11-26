@@ -1,15 +1,15 @@
 package ru.mpei.parser.dto.comtrade.cfg;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 import java.util.Map;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Cfg {
     private String name;
     private List<AnalogCfg> analogChannels;

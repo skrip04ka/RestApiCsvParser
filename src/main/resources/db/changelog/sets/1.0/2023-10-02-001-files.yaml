@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 2023-10-02-001-file_info
+      id: 2023-10-02-001-files
       author: skrip04ka
       changes:
         - createTable:
-            tableName: file_info
+            tableName: files
             columns:
               - column:
                   name: id
@@ -17,9 +17,13 @@ databaseChangeLog:
               - column:
                   name: n
                   type: int
+                  constraints:
+                    nullable: false
               - column:
                   name: freq
                   type: double precision
+                  constraints:
+                    nullable: false
               - column:
                   name: digital_number
                   type: int
@@ -35,3 +39,5 @@ databaseChangeLog:
               - column:
                   name: type
                   type: varchar(100)
+                  constraints:
+                    nullable: false

@@ -1,44 +1,44 @@
 package ru.mpei.parser.mapper;
 
-import ru.mpei.parser.dto.FileInfoDto;
+import ru.mpei.parser.dto.FileDto;
 import ru.mpei.parser.dto.data.AnalogMeasData;
 import ru.mpei.parser.dto.data.MeasData;
-import ru.mpei.parser.model.FileInfo;
+import ru.mpei.parser.model.File;
 import ru.mpei.parser.model.Measurement;
-import ru.mpei.parser.model.SignalType;
+import ru.mpei.parser.model.enums.SignalType;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class FileMapper {
-    public static FileInfo mapToFileInfo(FileInfoDto fileInfoDto, List<MeasData> measData) {
+    public static File mapToFileInfo(FileDto fileDto, List<MeasData> measData) {
         UUID fileInfoId = UUID.randomUUID();
-        return FileInfo.builder()
+        return File.builder()
                 .id(fileInfoId)
-                .name(fileInfoDto.getName())
-                .type(fileInfoDto.getType())
-                .analogNumber(fileInfoDto.getAnalogNumber())
-                .digitalNumber(fileInfoDto.getDigitalNumber())
-                .freq(fileInfoDto.getFreq())
-                .n(fileInfoDto.getN())
-                .timeStart(fileInfoDto.getTimeStart())
-                .timeEnd(fileInfoDto.getTimeEnd())
+                .name(fileDto.getName())
+                .type(fileDto.getType())
+                .analogNumber(fileDto.getAnalogNumber())
+                .digitalNumber(fileDto.getDigitalNumber())
+                .freq(fileDto.getFreq())
+                .n(fileDto.getN())
+                .timeStart(fileDto.getTimeStart())
+                .timeEnd(fileDto.getTimeEnd())
                 .measurements(mapToListMeasurement(measData, fileInfoId))
                 .build();
     }
 
-    public static FileInfoDto mapToFileInfoDto(FileInfo fileInfo) {
-        return FileInfoDto.builder()
-                .id(fileInfo.getId())
-                .name(fileInfo.getName())
-                .type(fileInfo.getType())
-                .analogNumber(fileInfo.getAnalogNumber())
-                .digitalNumber(fileInfo.getDigitalNumber())
-                .freq(fileInfo.getFreq())
-                .n(fileInfo.getN())
-                .timeStart(fileInfo.getTimeStart())
-                .timeEnd(fileInfo.getTimeEnd())
+    public static FileDto mapToFileInfoDto(File file) {
+        return FileDto.builder()
+                .id(file.getId())
+                .name(file.getName())
+                .type(file.getType())
+                .analogNumber(file.getAnalogNumber())
+                .digitalNumber(file.getDigitalNumber())
+                .freq(file.getFreq())
+                .n(file.getN())
+                .timeStart(file.getTimeStart())
+                .timeEnd(file.getTimeEnd())
                 .build();
     }
 
