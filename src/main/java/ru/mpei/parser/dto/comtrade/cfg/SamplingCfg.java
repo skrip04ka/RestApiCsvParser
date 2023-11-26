@@ -1,4 +1,4 @@
-package ru.mpei.parser.model.comtrade;
+package ru.mpei.parser.dto.comtrade.cfg;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -23,7 +23,6 @@ public class ComtradeController {
         this.comtradeService = comtradeService;
     }
 
-
     @PostMapping("/data/upload/comtrade")
     public ResponseEntity<ResponseMessage<String>> uploadComtrade(
             @RequestParam MultipartFile cfg,
@@ -40,7 +39,5 @@ public class ComtradeController {
                     "Could not upload the: cfg: " + cfg.getOriginalFilename() + " dat: " + dat.getOriginalFilename() + ". Error: " + e.getMessage())
             );
         }
-
     }
-
 }

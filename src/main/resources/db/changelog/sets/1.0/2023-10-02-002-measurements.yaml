@@ -7,24 +7,30 @@ databaseChangeLog:
             tableName: measurements
             columns:
               - column:
-                  name: meas_id
-                  type: serial
+                  name: file_info_id
+                  type: uuid
                   constraints:
-                    primaryKey: true
+                    foreignKeyName: fk_meas_file_info_id
+                    references: file_info(id)
+                    deleteCascade: true
               - column:
-                  name: meas_name
+                  name: type
+                  type: varchar(100)
+              - column:
+                  name: signal_number
+                  type: integer
+              - column:
+                  name: number
+                  type: integer
+              - column:
+                  name: name
                   type: varchar(100)
               - column:
                   name: values
-                  type: DOUBLE_ARRAY
-              - column:
-                  name: meta_id
-                  type: int
-                  constraints:
-                    foreignKeyName: fk_meas_meta_id
-                    references: meta_inf(meta_id)
-        - modifySql:
-            dbms: postgresql
-            replace:
-              replace: DOUBLE_ARRAY
-              with: double precision[]
+                  type: float8[]
+        - addPrimaryKey:
+            clustered: true
+            columnNames: file_info_id, signal_number, type
+            constraintName: pk_measurements
+            tableName: measurements
+            validate: true

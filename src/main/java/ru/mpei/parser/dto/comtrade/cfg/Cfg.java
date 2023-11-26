@@ -1,4 +1,4 @@
-package ru.mpei.parser.model.comtrade;
+package ru.mpei.parser.dto.comtrade.cfg;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,17 +14,17 @@ public class Cfg {
     private String name;
     private List<AnalogCfg> analogChannels;
     private List<DigitalCfg> digitalChannels;
-    private Map<Integer, DataType> dataTypes;
+    private Map<Integer, ComtradeDataType> dataTypes;
     private double freq;
     private List<SamplingCfg> samplingsFreq;
     private String dateStart;
     private String dateEnd;
-    private FileType fileType;
+    private ComtradeFileType comtradeFileType;
 
-    public enum FileType {
+    public enum ComtradeFileType {
         ASCII, BINARY
     }
-    public enum DataType {
+    public enum ComtradeDataType {
         A, D
     }
 }

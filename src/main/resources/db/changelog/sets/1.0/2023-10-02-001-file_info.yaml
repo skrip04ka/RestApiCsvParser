@@ -1,14 +1,14 @@
 databaseChangeLog:
   - changeSet:
-      id: 2023-10-02-001-meta_inf
+      id: 2023-10-02-001-file_info
       author: skrip04ka
       changes:
         - createTable:
-            tableName: meta_inf
+            tableName: file_info
             columns:
               - column:
-                  name: meta_id
-                  type: serial
+                  name: id
+                  type: uuid
                   constraints:
                     primaryKey: true
               - column:
@@ -21,10 +21,10 @@ databaseChangeLog:
                   name: freq
                   type: double precision
               - column:
-                  name: digital
+                  name: digital_number
                   type: int
               - column:
-                  name: analog
+                  name: analog_number
                   type: int
               - column:
                   name: time_start

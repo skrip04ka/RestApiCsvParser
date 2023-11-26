@@ -3,8 +3,11 @@ package ru.mpei.parser.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.mpei.parser.model.dto.FaultData;
+import ru.mpei.parser.dto.analise.FaultData;
+import ru.mpei.parser.dto.analise.FaultPhasesNumber;
 import ru.mpei.parser.service.AnaliseService;
+
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200/")
@@ -18,17 +21,14 @@ public class AnaliseController {
         this.analiseService = analiseService;
     }
 
-    @GetMapping("/data/analise/{id}")
-    public FaultData analiseMeas(@PathVariable Long id,
-                                 @RequestParam String phAName,
-                                 @RequestParam String phBName,
-                                 @RequestParam String phCName,
+    @GetMapping("/file/{id}/analise")
+    public FaultData analiseMeas(@PathVariable UUID id,
+                                 @RequestBody FaultPhasesNumber faultPhasesNumber,
                                  @RequestParam(required = false) Double stock) {
         if (stock==null) {
-            return analiseService.analiseMeas(id, phAName, phBName, phCName);
+            return analiseService.analiseMeas(id, faultPhasesNumber);
         } else {
-            return analiseService.analiseMeas(id, phAName, phBName, phCName, stock);
+            return analiseService.analiseMeas(id, faultPhasesNumber, stock);
         }
     }
-
 }
