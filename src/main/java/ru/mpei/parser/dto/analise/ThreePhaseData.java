@@ -12,5 +12,4 @@ public class ThreePhaseData {
     private double phA;
     private double phB;
     private double phC;
-
 }

@@ -17,8 +17,8 @@ public class FileDto {
     private int n;
     private double freq;
     private String name;
-    private int digitalNumber;
-    private int analogNumber;
+    private Integer digitalNumber;
+    private Integer analogNumber;
     private String timeStart;
     private String timeEnd;
     private FileType type;

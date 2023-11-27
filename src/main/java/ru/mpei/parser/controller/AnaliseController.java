@@ -21,14 +21,13 @@ public class AnaliseController {
         this.analiseService = analiseService;
     }
 
-    @GetMapping("/file/{id}/analise")
+    @PostMapping("/file/{id}/analise")
     public FaultData analiseMeas(@PathVariable UUID id,
-                                 @RequestBody FaultPhasesNumber faultPhasesNumber,
-                                 @RequestParam(required = false) Double stock) {
-        if (stock==null) {
+                                 @RequestBody FaultPhasesNumber faultPhasesNumber) {
+        if (faultPhasesNumber.getStock() == null) {
             return analiseService.analiseMeas(id, faultPhasesNumber);
         } else {
-            return analiseService.analiseMeas(id, faultPhasesNumber, stock);
+            return analiseService.analiseMeas(id, faultPhasesNumber, faultPhasesNumber.getStock());
         }
     }
 }

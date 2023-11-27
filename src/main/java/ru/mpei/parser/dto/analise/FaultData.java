@@ -12,4 +12,3 @@ public class FaultData {
     private ThreePhaseData normalCurrent;
     private ThreePhaseData faultCurrent;
 }
-

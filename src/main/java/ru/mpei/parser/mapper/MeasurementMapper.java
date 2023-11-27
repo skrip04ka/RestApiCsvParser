@@ -16,7 +16,7 @@ public class MeasurementMapper {
     }
 
     public static MeasurementView mapToMeasurementViewAndSplitValues(Measurement measurement, Range range) {
-        return MeasurementView.builder()
+        MeasurementView view = MeasurementView.builder()
                 .key(mapToKeyView(measurement.getKey()))
                 .number(measurement.getNumber())
                 .name(measurement.getName())
@@ -24,8 +24,9 @@ public class MeasurementMapper {
                         .skip(range.getStart())
                         .limit(range.getEnd() - range.getStart())
                         .toList())
-                .range(range)
                 .build();
+        view.setRange(new Range(range.getStart(), range.getStart() + view.getValues().size()));
+        return view;
     }
 
     public static KeyView mapToKeyView(Measurement.Key key) {

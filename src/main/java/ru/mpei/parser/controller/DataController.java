@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "http://localhost:4200")
 @Slf4j
 public class DataController {
 
@@ -25,7 +25,7 @@ public class DataController {
         this.measurementsService = measurementsService;
     }
 
-    @GetMapping("/file/{id}/measurements")
+    @PostMapping("/file/{id}/measurements")
     public List<MeasurementView> getMeasWithValuesByRange(
             @PathVariable UUID id,
             @RequestBody NumbersAndRange numbersAndRange

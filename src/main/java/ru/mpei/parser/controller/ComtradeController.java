@@ -23,7 +23,7 @@ public class ComtradeController {
         this.comtradeService = comtradeService;
     }
 
-    @PostMapping("/data/upload/comtrade")
+    @PostMapping("/file/upload/comtrade")
     public ResponseEntity<ResponseMessage<String>> uploadComtrade(
             @RequestParam MultipartFile cfg,
             @RequestParam MultipartFile dat) {

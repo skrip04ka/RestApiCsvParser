@@ -24,7 +24,7 @@ public class MeasurementsService {
 
     @Transactional(readOnly = true)
     public List<MeasurementView> getMeasWithValuesByRange(UUID fileId, List<Integer> signalNumbers, Range range) {
-        int MAX_SIZE = 50_000;
+        int MAX_SIZE = 20_000;
         range.setEnd(Math.min(range.getEnd() - range.getStart(), MAX_SIZE) + range.getStart());
         return measurementsRepository
                 .getMeasurementsByFileIdAndSignalNumbers(fileId, signalNumbers).stream()
