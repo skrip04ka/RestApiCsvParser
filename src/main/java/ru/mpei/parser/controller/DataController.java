@@ -1,17 +1,20 @@
 package ru.mpei.parser.controller;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.mpei.parser.model.MetaInf;
-import ru.mpei.parser.model.dto.FileInfo;
-import ru.mpei.parser.model.dto.MeasList;
+import ru.mpei.parser.dto.FileDto;
+import ru.mpei.parser.dto.Range;
+import ru.mpei.parser.dto.view.MeasurementInfoView;
+import ru.mpei.parser.dto.view.MeasurementView;
 import ru.mpei.parser.service.MeasurementsService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "http://localhost:4200")
 @Slf4j
 public class DataController {
 
@@ -22,32 +25,43 @@ public class DataController {
         this.measurementsService = measurementsService;
     }
 
-
-    @PostMapping("/data/get-data/{id}")
-    public List<MeasList> getDataAll(@PathVariable Long id,
-                                     @RequestParam List<String> names,
-                                     @RequestParam Integer start,
-                                     @RequestParam Integer end) {
-        List<MeasList> list = measurementsService.getMeasByName(id, names, start, end);
-        log.info("send all data len {}, analogMeas = {}, digital meas = {}", list.size(),
-                list.get(0).getMeas().size(),
-                list.get(0).getDmeas().size());
+    @PostMapping("/file/{id}/measurements")
+    public List<MeasurementView> getMeasWithValuesByRange(
+            @PathVariable UUID id,
+            @RequestBody NumbersAndRange numbersAndRange
+    ) {
+        List<MeasurementView> list = measurementsService.getMeasWithValuesByRange(
+                id,
+                numbersAndRange.signalNumber,
+                numbersAndRange.range);
+        log.info("send all data len {}, values size = {}", list.size(),
+                list.get(0).getValues().size());
         return list;
     }
 
-    @GetMapping("/data/names/{id}")
-    public List<String> getMeasName(@PathVariable Long id) {
-        return measurementsService.getMeasName(id);
+    @GetMapping("/file/{id}/measurements/info")
+    public List<MeasurementInfoView> getMeasurementsInfo(@PathVariable UUID id) {
+        return measurementsService.getMeasurementsInfo(id);
     }
 
-    @GetMapping("/data/meta-inf/{id}")
-    public MetaInf getMetaInf(@PathVariable Long id) {
-        return measurementsService.getMetaInf(id);
+    @GetMapping("/file/{id}/info")
+    public FileDto getFileInfo(@PathVariable UUID id) {
+        return measurementsService.getFile(id);
     }
 
-    @GetMapping("/data/files")
-    public List<FileInfo> getMeasName() {
-        return measurementsService.getFilesInfo();
+    @GetMapping("/files")
+    public List<FileDto> getFilesInfo() {
+        return measurementsService.getFiles();
     }
 
+    @DeleteMapping("/file/{id}/delete")
+    public void deleteFile(@PathVariable UUID id) {
+        measurementsService.deleteFile(id);
+    }
+
+    @Data
+    public static class NumbersAndRange{
+        List<Integer> signalNumber;
+        Range range;
+    }
 }
