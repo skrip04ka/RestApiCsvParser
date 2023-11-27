@@ -1,11 +1,10 @@
-package ru.mpei.parser.service.impl;
+package ru.mpei.parser.service.filter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.mpei.parser.model.Measurements;
-import ru.mpei.parser.model.measurement.AnalogMeas;
-import ru.mpei.parser.service.FilterService;
+import ru.mpei.parser.dto.data.MeasData;
+import ru.mpei.parser.dto.data.AnalogMeasData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +24,7 @@ public class RmsFilterService implements FilterService {
 
 
     @Override
-    public int calculate(List<Measurements> measurementList, double freq) {
+    public int calculate(List<MeasData> measurementList, double freq) {
 
         if (measurementList.size() < 2) {
             log.warn("measurementList.size() < 2");
@@ -40,15 +39,15 @@ public class RmsFilterService implements FilterService {
         }
 
         List<String> names = measurementList.get(0).getAnalogMeas().stream()
-                .map(AnalogMeas::getName).toList();
-        Map<String, RmsCalc> rms = new HashMap<>();
+                .map(AnalogMeasData::getName).toList();
+        Map<String, RmsCalculator> rms = new HashMap<>();
 
-        names.forEach(name -> rms.put(name, new RmsCalc(N)));
+        names.forEach(name -> rms.put(name, new RmsCalculator(N)));
 
-        for (Measurements m : measurementList) {
+        for (MeasData m : measurementList) {
             m.setRmsMeas(new ArrayList<>());
-            for (AnalogMeas am : m.getAnalogMeas()) {
-                m.getRmsMeas().add(new AnalogMeas(am.getName() + "_" + rmsSuffix,
+            for (AnalogMeasData am : m.getAnalogMeas()) {
+                m.getRmsMeas().add(new AnalogMeasData(am.getName() + " " + rmsSuffix,
                         rms.get(am.getName()).calcNext(am.getVal())
                 ));
             }
@@ -58,11 +57,11 @@ public class RmsFilterService implements FilterService {
         return N;
     }
 
-    private static class RmsCalc {
+    private static class RmsCalculator {
         private final double[] buffer;
         private int i = 0;
 
-        public RmsCalc(int N) {
+        public RmsCalculator(int N) {
             this.buffer = new double[N];
         }
 

@@ -23,7 +23,7 @@ public class CsvController {
         this.csvService = csvService;
     }
 
-    @PostMapping("/data/upload/csv")
+    @PostMapping("/file/upload/csv")
     public ResponseEntity<ResponseMessage<String>> uploadCsv(@RequestParam MultipartFile csv) {
         log.info("get one file {}", csv.getOriginalFilename());
         try {
@@ -38,5 +38,4 @@ public class CsvController {
             );
         }
     }
-
 }

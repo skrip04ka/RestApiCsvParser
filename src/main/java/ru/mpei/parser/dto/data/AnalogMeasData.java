@@ -1,4 +1,4 @@
-package ru.mpei.parser.model.measurement;
+package ru.mpei.parser.dto.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AnalogMeas {
+public class AnalogMeasData {
     private String name;
     double val;
 }
